@@ -9,7 +9,7 @@ class FormModel {
     public function addUser($name, $lastname, $option, $message) {
         try {
             $stmt = $this->conexion->prepare("
-                INSERT INTO userdata (name, lastname, `option`, message)
+                INSERT INTO userdata (name, lastname, option, message)
                 VALUES (:name, :lastname, :option, :message)
             ");
             $stmt->bindParam(':name', $name, PDO::PARAM_STR);

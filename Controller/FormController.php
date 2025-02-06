@@ -13,8 +13,8 @@ class FormController {
         
         if ($resultado === true) {
             echo "<script>
-                alert('Red social agregada exitosamente.');
-                window.location.href = 'index.php';
+                alert('Formulario enviado exitosamente.');
+                window.location.href = '/';
             </script>";
         } else {
             echo "<script>alert('Error: $resultado');</script>";
