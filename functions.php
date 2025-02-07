@@ -15,9 +15,9 @@ function addUser($name, $lastname, $option, $message, $email, $checkcontacted, $
     $stmt->bindParam(':email', $email, PDO::PARAM_STR);
 
     if ($stmt->execute()) {
-        echo "Formulario enviado correctamente.";
+        return "Formulario enviado correctamente.";
     } else {
-        echo "Error al enviar el formulario.";
+        return "Error al enviar el formulario.";
     }
     } catch (PDOException $e) {
         return "Error: " . $e->getMessage();
