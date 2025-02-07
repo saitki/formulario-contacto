@@ -1,6 +1,7 @@
 <?php 
 require_once __DIR__ . '/DB/db.php'; 
 require_once __DIR__ . '/functions.php'; 
+
 $nameError = $lastnameError = $emailError = "";
 $name = $lastname = $email = ""; // Para guardar los valores
 $conexion = conexion();
@@ -36,28 +37,40 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $message = $_POST["message"];
     }
 
-
     if (empty($_POST["option"])) {
         $optionError = "Este campo es obligatorio";
         $valid = false;
     } else {
-        $message = $_POST["option"];
+        $option = $_POST["option"];
     }
 
     if (empty($_POST["checkcontacted"])) {
+        
         $checkcontactedError = "Para enviar este formulario, por favor consiente ser contactado";
         $valid = false;
     } else {
+        
         $checkcontacted = $_POST["checkcontacted"];
     }
 
     if ($valid) {
-        addUser($name, $lastname, $option, $message, $email, $checkcontacted, $conexion);
+        $status = addUser($name, $lastname, $option, $message, $email, $checkcontacted, $conexion);
+        echo "<script>
+            document.addEventListener('DOMContentLoaded', function() {
+                showCustomAlert('Éxito', " . json_encode($status) . ");
+            });
+        </script>";
     } else {
-        echo "Por favor complete todos los campos.";
+        echo "<script>
+            document.addEventListener('DOMContentLoaded', function() {
+                showCustomAlert('Error', 'Por favor, complete todos los campos obligatorios.');
+            });
+        </script>";
     }
+    
 }
 ?>
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -118,14 +131,55 @@ button:active {
 }
 
 
-        
+        /* Estilos para el contenedor de la alerta */
+.custom-alert {
+    position: fixed;
+    top: 20px; /* Ubicación en la parte superior */
+    left: 30%;
+    transform: translateX(-0%); /* Centra la alerta horizontalmente */
+    background-color: #2a4244; /* Fondo rojo claro */
+    color: #f1fdff; /* Texto rojo oscuro */
+    border: 1px solid #f5c6cb;
+    border-radius: 10px; /* Bordes redondeados */
+    padding: 15px 25px;
+    width: 80%; /* Ancho ajustable */
+    max-width: 500px; /* Máximo ancho */
+    display: none; /* Oculto por defecto */
+    z-index: 9999; /* Asegura que esté sobre otros elementos */
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+.custom-alert .alert-content {
+    text-align: left; /* Centra el contenido dentro de la alerta */
+}
+
+.custom-alert .alert-content strong {
+    font-size: 1.2em; /* Título más grande */
+    display: block;
+}
+
+.custom-alert .alert-content p {
+    margin: 5px 0 0;
+}
+
+/* Animación de aparición de la alerta */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
     </style>
 </head>
 <body>
 
 
-
-    <div class="card container w-50 p-5" style="width: 18rem; margin-top: 40px; margin-bottom: 40px;">
+    <div class="card container w-50 p-5" style="width: 18rem; margin-top: 120px; margin-bottom: 40px;">
      <form id="myForm" action="<?= $_SERVER['PHP_SELF'] ?>" class="formulario" enctype="multipart/form-data" method="post">
         
      <label for="name" class="form-label" style="font-size: 30px; margin-top:-40px;">Contactanos</label>
@@ -177,7 +231,7 @@ button:active {
     </div>   
         <div class="mb-3">
             <label for="exampleFormControlTextarea1" class="form-label">Mensaje</label>
-             <textarea class="form-control <?php echo !empty($emailError) ? 'is-invalid' : ''; ?>"   name="message" id="exampleFormControlTextarea1" rows="3" ></textarea>
+             <textarea class="form-control <?php echo !empty($messageError) ? 'is-invalid' : ''; ?>"   name="message" id="exampleFormControlTextarea1" rows="3" ></textarea>
              <?php if (!empty($messageError)): ?>
                 <div class="error"><?php echo $messageError; ?></div>
             <?php endif; ?>   
@@ -193,8 +247,8 @@ button:active {
         <button type="submit" class="btn btn-primary">Submit</button>
         </form>
         <!-- Mensajes de éxito o error -->
-        <?php if (isset($errorMessage)) { echo "<p class='error'>$errorMessage</p>"; } ?>
-    <?php if (isset($successMessage)) { echo "<p class='success'>$successMessage</p>"; } ?>
+
+
 
     <script>
   document.getElementById('myForm').addEventListener('submit', function(event) {
@@ -205,61 +259,38 @@ button:active {
     }
   });
 </script>
+<div id="customAlert" class="custom-alert">
+    <div class="alert-content">
+        <strong id="alert-title">¡Alerta!</strong>
+        <p id="alert-message">Este es el contenido de la alerta.</p>
+    </div>
+</div>
+
+
 <script>
     // Validación en el lado del cliente (JavaScript)
-    document.getElementById("contactForm").addEventListener("submit", function(event) {
-        let formIsValid = true;
-        
-        // Validar Nombre
-        let name = document.getElementById("name");
-        let nameError = document.getElementById("nameError");
-        if (name.value.trim() === "") {
-            name.classList.add("is-invalid");
-            nameError = document.createElement("div");
-            nameError.classList.add("error");
-            nameError.textContent = "El nombre es obligatorio.";
-            name.parentNode.appendChild(nameError);
-            formIsValid = false;
-        } else {
-            name.classList.remove("is-invalid");
-            if (nameError) nameError.remove();
-        }
-        
-        // Validar Apellido
-        let lastname = document.getElementById("lastname");
-        let lastnameError = document.getElementById("lastnameError");
-        if (lastname.value.trim() === "") {
-            lastname.classList.add("is-invalid");
-            lastnameError = document.createElement("div");
-            lastnameError.classList.add("error");
-            lastnameError.textContent = "El apellido es obligatorio.";
-            lastname.parentNode.appendChild(lastnameError);
-            formIsValid = false;
-        } else {
-            lastname.classList.remove("is-invalid");
-            if (lastnameError) lastnameError.remove();
-        }
+  
+   function showCustomAlert(title, message) {
+    const alertElement = document.getElementById('customAlert');
+    const alertTitle = document.getElementById('alert-title');
+    const alertMessage = document.getElementById('alert-message');
+    
+    // Cambiar el contenido de la alerta
+    alertTitle.textContent = title;
+    alertMessage.textContent = message;
 
-        // Validar Correo
-        let email = document.getElementById("email");
-        let emailError = document.getElementById("emailError");
-        if (email.value.trim() === "") {
-            email.classList.add("is-invalid");
-            emailError = document.createElement("div");
-            emailError.classList.add("error");
-            emailError.textContent = "El correo electrónico es obligatorio.";
-            email.parentNode.appendChild(emailError);
-            formIsValid = false;
-        } else {
-            email.classList.remove("is-invalid");
-            if (emailError) emailError.remove();
-        }
+    // Mostrar la alerta
+    alertElement.style.display = 'block';  // Asegúrate de que se muestre cada vez que se llame
 
-        // Si algún campo es inválido, prevenimos el envío
-        if (!formIsValid) {
-            event.preventDefault();
-        }
-    });
+    // Ocultar la alerta después de un tiempo (3 segundos)
+    setTimeout(function() {
+        alertElement.style.display = 'none'; // Volver a ocultar
+    }, 3000);
+}
+
+
+// Ejemplo de uso: Mostrar la alerta con título y mensaje
+
 </script>
     </div>
     <div class="autor">
