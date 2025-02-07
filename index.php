@@ -1,19 +1,63 @@
 <?php 
 require_once __DIR__ . '/DB/db.php'; 
 require_once __DIR__ . '/functions.php'; 
-
+$nameError = $lastnameError = $emailError = "";
+$name = $lastname = $email = ""; // Para guardar los valores
 $conexion = conexion();
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $name = $_POST["name"];
-    $lastname = $_POST["lastname"];
-    $option = $_POST["option"];
-    $message = $_POST["message"];
-    $email = $_POST["email"];
+    $valid = true; // Flag para controlar si todo es válido
+    
+    if (empty($_POST["name"])) {
+        $nameError = "El nombre es obligatorio.";
+        $valid = false;
+    } else {
+        $name = $_POST["name"];
+    }
 
-    addUser($name, $lastname, $option, $message, $email, $conexion);
+    if (empty($_POST["lastname"])) {
+        $lastnameError = "El apellido es obligatorio.";
+        $valid = false;
+    } else {
+        $lastname = $_POST["lastname"];
+    }
+
+    if (empty($_POST["email"])) {
+        $emailError = "El correo electrónico es obligatorio.";
+        $valid = false;
+    } else {
+        $email = $_POST["email"];
+    }
+
+    if (empty($_POST["message"])) {
+        $messageError = "El mensaje es obligatorio.";
+        $valid = false;
+    } else {
+        $message = $_POST["message"];
+    }
 
 
+    if (empty($_POST["option"])) {
+        $optionError = "El option es obligatorio.";
+        $valid = false;
+    } else {
+        $message = $_POST["option"];
+    }
+
+    if (empty($_POST["checkcontacted"])) {
+        $checkcontactedError = "El Check es obligatorio.";
+        $valid = false;
+    } else {
+        $checkcontacted = $_POST["checkcontacted"];
+    }
+
+    // Si todo es válido, llamamos a la función addUser
+    if ($valid) {
+        addUser($name, $lastname, $option, $message, $email, $checkcontacted, $conexion);
+    } else {
+        // Si algún campo está vacío, no se ejecuta la función addUser y se muestran los errores.
+        echo "Por favor complete todos los campos.";
+    }
 }
 ?>
 <!DOCTYPE html>
@@ -22,9 +66,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" type="image/png" sizes="32x32" href="./assets/images/favicon-32x32.png">
-    <link rel="stylesheet" href="vendor/twbs/bootstrap/dist/css/bootstrap.min.css">
-
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
     <title>Formulario de contacto</title>
+    <link href="css/style.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
 
     <style>
         .autor { font-size: 11px; text-align: center; }
@@ -38,30 +83,32 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 
     <div class="card container w-50 p-5" style="width: 18rem; margin-top: 40px; margin-bottom: 40px;">
-     <form action="<?= $_SERVER['PHP_SELF'] ?>" class="formulario" enctype="multipart/form-data" method="post">
+     <form id="myForm" action="<?= $_SERVER['PHP_SELF'] ?>" class="formulario" enctype="multipart/form-data" method="post">
         
      <label for="name" class="form-label" style="font-size: 30px; margin-top:-40px;">Contactanos</label>
      <div class="">
         <div class="row ">
         <div class="mb-3 col align-self-start">
             <label for="name" class="form-label">Nombre</label>
-            <input type="text" class="form-control" name="name" id="name" aria-describedby="nameHelp" required>
-            <div id="nameHelp" class="form-text"></div>
+            <input type="text" class="form-control <?php echo !empty($nameError) ? 'is-invalid' : ''; ?>" name="name" id="name" value="<?php echo htmlspecialchars($name); ?>">
+            <?php if (!empty($nameError)): ?>
+                <div class="error"><?php echo $nameError; ?></div>
+            <?php endif; ?>
         </div>
         <div class="mb-3 col">
             <label for="lastname" class="form-label">Apellido</label>
-            <input type="text" class="form-control"  name="lastname" id="lastname" aria-describedby="lastnameHelp" required>
-            <div id="lastnameHelp" class="form-text"></div>
-        </div>
-        </div>
-    </div>   
+            <input type="text" class="form-control <?php echo !empty($lastnameError) ? 'is-invalid' : ''; ?>"  name="lastname" id="lastname" aria-describedby="lastnameHelp" >
+            <?php if (!empty($lastnameError)): ?>
+                <div class="error"><?php echo $lastnameError; ?></div>
+            <?php endif; ?>        
+        </div>   
      
-
-
         <div class="mb-3">
             <label for="email" class="form-label">Correo electrónico</label>
-            <input type="email" class="form-control" name="email" id="email" aria-describedby="emailHelp" required>
-            <div id="emailHelp" class="form-text"></div>
+            <input type="email" class="form-control <?php echo !empty($emailError) ? 'is-invalid' : ''; ?>" name="email" id="email" aria-describedby="emailHelp" >
+            <?php if (!empty($emailError)): ?>
+                <div class="error"><?php echo $emailError; ?></div>
+            <?php endif; ?>                
         </div>
 
         <div class=" mb-3 ">
@@ -69,7 +116,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <label  class="form-label">Selecciona una opción</label><br>
 
                 <div class="form-check col" style="margin-left: 10px;">
-                <input class="form-check-input" type="radio" id="flexRadioDefault1" name="option" value="1" checked>
+                <input class="form-check-input" type="radio" id="flexRadioDefault1" name="option" value="1">
                 <label class="form-check-label" for="flexRadioDefault1"> Opción 1 </label>
 
                 </div>
@@ -78,18 +125,24 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 <label class="form-check-label" for="flexRadioDefault2">Opción 2 </label>
                 </div>
             </div>
+            <?php if (!empty($optionError)): ?>
+                <div class="error"><?php echo $optionError; ?></div>
+            <?php endif; ?>   
     </div>   
-
-
-       
         <div class="mb-3">
             <label for="exampleFormControlTextarea1" class="form-label">Mensaje</label>
-             <textarea class="form-control" name="message" id="exampleFormControlTextarea1" rows="3" required></textarea>
-        </div>
+             <textarea class="form-control <?php echo !empty($emailError) ? 'is-invalid' : ''; ?>"   name="message" id="exampleFormControlTextarea1" rows="3" ></textarea>
+             <?php if (!empty($messageError)): ?>
+                <div class="error"><?php echo $messageError; ?></div>
+            <?php endif; ?>   
+            </div>
         
         <div class="mb-3 form-check">
-            <input type="checkbox" class="form-check-input" id="exampleCheck1">
-            <label class="form-check-label" for="exampleCheck1">Check me out</label>
+            <input type="checkbox" class="form-check-input" id="checkcontacted"  name="checkcontacted" value="1">
+            <label class="form-check-label"   for="checkcontacted">Check me out</label>
+            <?php if (!empty($checkcontactedError)): ?>
+                <div class="error"><?php echo $checkcontactedError; ?></div>
+            <?php endif; ?>   
         </div>
         <button type="submit" class="btn btn-primary">Submit</button>
         </form>
@@ -97,7 +150,71 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <?php if (isset($errorMessage)) { echo "<p class='error'>$errorMessage</p>"; } ?>
     <?php if (isset($successMessage)) { echo "<p class='success'>$successMessage</p>"; } ?>
 
+    <script>
+  document.getElementById('myForm').addEventListener('submit', function(event) {
+    const checkbox = document.getElementById('checkcontacted');
+    if (!checkbox.checked) {
+      // Si no está marcado, enviamos un valor de 0
+      checkbox.value = "0";
+    }
+  });
+</script>
+<script>
+    // Validación en el lado del cliente (JavaScript)
+    document.getElementById("contactForm").addEventListener("submit", function(event) {
+        let formIsValid = true;
+        
+        // Validar Nombre
+        let name = document.getElementById("name");
+        let nameError = document.getElementById("nameError");
+        if (name.value.trim() === "") {
+            name.classList.add("is-invalid");
+            nameError = document.createElement("div");
+            nameError.classList.add("error");
+            nameError.textContent = "El nombre es obligatorio.";
+            name.parentNode.appendChild(nameError);
+            formIsValid = false;
+        } else {
+            name.classList.remove("is-invalid");
+            if (nameError) nameError.remove();
+        }
+        
+        // Validar Apellido
+        let lastname = document.getElementById("lastname");
+        let lastnameError = document.getElementById("lastnameError");
+        if (lastname.value.trim() === "") {
+            lastname.classList.add("is-invalid");
+            lastnameError = document.createElement("div");
+            lastnameError.classList.add("error");
+            lastnameError.textContent = "El apellido es obligatorio.";
+            lastname.parentNode.appendChild(lastnameError);
+            formIsValid = false;
+        } else {
+            lastname.classList.remove("is-invalid");
+            if (lastnameError) lastnameError.remove();
+        }
 
+        // Validar Correo
+        let email = document.getElementById("email");
+        let emailError = document.getElementById("emailError");
+        if (email.value.trim() === "") {
+            email.classList.add("is-invalid");
+            emailError = document.createElement("div");
+            emailError.classList.add("error");
+            emailError.textContent = "El correo electrónico es obligatorio.";
+            email.parentNode.appendChild(emailError);
+            formIsValid = false;
+        } else {
+            email.classList.remove("is-invalid");
+            if (emailError) emailError.remove();
+        }
+
+        // Si algún campo es inválido, prevenimos el envío
+        if (!formIsValid) {
+            event.preventDefault();
+        }
+    });
+</script>
     </div>
     <div class="autor">
         Formulario de contacto @2025. Desarrollado por <a href="#">Alejandro Lenier Ireta Xiu</a>.
