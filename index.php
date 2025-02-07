@@ -9,28 +9,28 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $valid = true; // Flag para controlar si todo es válido
     
     if (empty($_POST["name"])) {
-        $nameError = "El nombre es obligatorio.";
+        $nameError = "Este campo es obligatorio";
         $valid = false;
     } else {
         $name = $_POST["name"];
     }
 
     if (empty($_POST["lastname"])) {
-        $lastnameError = "El apellido es obligatorio.";
+        $lastnameError = "Este campo es obligatorio";
         $valid = false;
     } else {
         $lastname = $_POST["lastname"];
     }
 
     if (empty($_POST["email"])) {
-        $emailError = "El correo electrónico es obligatorio.";
+        $emailError = "Este campo es obligatorio";
         $valid = false;
     } else {
         $email = $_POST["email"];
     }
 
     if (empty($_POST["message"])) {
-        $messageError = "El mensaje es obligatorio.";
+        $messageError = "Este campo es obligatorio";
         $valid = false;
     } else {
         $message = $_POST["message"];
@@ -38,24 +38,22 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 
     if (empty($_POST["option"])) {
-        $optionError = "El option es obligatorio.";
+        $optionError = "Este campo es obligatorio";
         $valid = false;
     } else {
         $message = $_POST["option"];
     }
 
     if (empty($_POST["checkcontacted"])) {
-        $checkcontactedError = "El Check es obligatorio.";
+        $checkcontactedError = "Para enviar este formulario, por favor consiente ser contactado";
         $valid = false;
     } else {
         $checkcontacted = $_POST["checkcontacted"];
     }
 
-    // Si todo es válido, llamamos a la función addUser
     if ($valid) {
         addUser($name, $lastname, $option, $message, $email, $checkcontacted, $conexion);
     } else {
-        // Si algún campo está vacío, no se ejecuta la función addUser y se muestran los errores.
         echo "Por favor complete todos los campos.";
     }
 }
@@ -76,6 +74,51 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         .autor a { color: hsl(228, 45%, 44%); }
         .error { color: red; }
         .success { color: green; }
+
+.form-control {
+    transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.form-control:hover {
+    border-color: #3d685e; 
+
+}
+
+.form-control:focus {
+    border-color: #3d685e; 
+    outline: none; 
+}
+
+.form-control:active {
+    border-color: #3d685e;
+}
+
+.form-control.is-invalid {
+    border-color: #dc3545; 
+}
+.error {
+    color: #dc3545; 
+    font-size: 0.875rem;
+    margin-top: 5px;
+}
+
+button:hover {
+    background-color: #0056b3; 
+    border-color: #004085; 
+}
+
+button:focus {
+    outline: none;
+    box-shadow: 0 0 0 0.2rem rgba(38, 143, 255, 0.5); 
+}
+
+button:active {
+    background-color: #004085; 
+    border-color: #003366;
+}
+
+
+        
     </style>
 </head>
 <body>
@@ -142,7 +185,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         
         <div class="mb-3 form-check">
             <input type="checkbox" class="form-check-input" id="checkcontacted"  name="checkcontacted" value="1">
-            <label class="form-check-label"   for="checkcontacted">Check me out</label>
+            <label class="form-check-label"   for="checkcontacted">Autorizó para ser contactado por el equipo</label>
             <?php if (!empty($checkcontactedError)): ?>
                 <div class="error"><?php echo $checkcontactedError; ?></div>
             <?php endif; ?>   
