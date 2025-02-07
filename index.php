@@ -114,15 +114,18 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <div class=" mb-3 ">
             <div class="row ">
             <label  class="form-label">Selecciona una opción</label><br>
+                <div class="form-control col" style="margin-left: 10px;">
+                    <div class="form-check " >
+                    <input class="form-check-input" type="radio" id="flexRadioDefault1" name="option" value="1">
+                    <label class="form-check-label" for="flexRadioDefault1"> Opción 1 </label>
 
-                <div class="form-check col" style="margin-left: 10px;">
-                <input class="form-check-input" type="radio" id="flexRadioDefault1" name="option" value="1">
-                <label class="form-check-label" for="flexRadioDefault1"> Opción 1 </label>
-
+                    </div>
                 </div>
-                <div class="form-check col" style="margin-left: 10px;">
-                <input class="form-check-input" type="radio" name="option" id="flexRadioDefault2"  value="2" >
-                <label class="form-check-label" for="flexRadioDefault2">Opción 2 </label>
+                <div class="form-control col"  style="margin-left: 10px; margin-right: 10px;">
+                    <div class="form-check ">
+                    <input class="form-check-input" type="radio" name="option" id="flexRadioDefault2"  value="2" >
+                    <label class="form-check-label" for="flexRadioDefault2">Opción 2 </label>
+                    </div>
                 </div>
             </div>
             <?php if (!empty($optionError)): ?>
