@@ -87,11 +87,24 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         .autor a { color: hsl(228, 45%, 44%); }
         .error { color: red; }
         .success { color: green; }
-
+body {
+    background-color: aquamarine;
+}
 .form-control {
     transition: border-color 0.3s, box-shadow 0.3s;
 }
+.container{
+    background: white;
+    border-radius: 20px; /* Bordes redondeados */
+    border: 0px solidrgb(255, 255, 255);
 
+}
+.card{
+    background: white;
+    border-radius: 20px; /* Bordes redondeados */
+    border: 0px solidrgb(255, 255, 255);
+
+}
 .form-control:hover {
     border-color: #3d685e; 
 
@@ -139,7 +152,7 @@ button:active {
     transform: translateX(-0%); /* Centra la alerta horizontalmente */
     background-color: #2a4244; /* Fondo rojo claro */
     color: #f1fdff; /* Texto rojo oscuro */
-    border: 1px solid #f5c6cb;
+    border: 1px solid #2a4244;
     border-radius: 10px; /* Bordes redondeados */
     padding: 15px 25px;
     width: 80%; /* Ancho ajustable */
@@ -173,16 +186,41 @@ button:active {
         transform: translateY(0);
     }
 }
-
+.icon {
+  width: 24px;
+  height: 24px;
+}
+#alert-title {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px; /* Espaciado entre el icono y el texto */
+}
     </style>
 </head>
 <body>
+<svg xmlns="http://www.w3.org/2000/svg" class="d-none" >
+  <symbol id="check-circle-fill" viewBox="0 0 16 16">
+    <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"/>
+  </symbol>
+  <symbol id="info-fill" viewBox="0 0 16 16">
+    <path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm.93-9.412-1 4.705c-.07.34.029.533.304.533.194 0 .487-.07.686-.246l-.088.416c-.287.346-.92.598-1.465.598-.703 0-1.002-.422-.808-1.319l.738-3.468c.064-.293.006-.399-.287-.47l-.451-.081.082-.381 2.29-.287zM8 5.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2z"/>
+  </symbol>
+  <symbol id="exclamation-triangle-fill" viewBox="0 0 16 16">
+    <path d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5zm.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/>
+  </symbol>
+</svg>
 
-
+<div id="customAlert" class="custom-alert">
+    <div class="alert-content">
+    <svg class="bi flex-shrink-0 me-2 icon" role="img" aria-label="Info:"><use xlink:href="#info-fill"/></svg>
+    <p id="alert-title" style="font-size: 20px;"> ¡Alerta!</p>
+        <p id="alert-message">Este es el contenido de la alerta.</p>
+    </div>
+</div>
     <div class="card container w-50 p-5" style="width: 18rem; margin-top: 120px; margin-bottom: 40px;">
      <form id="myForm" action="<?= $_SERVER['PHP_SELF'] ?>" class="formulario" enctype="multipart/form-data" method="post">
         
-     <label for="name" class="form-label" style="font-size: 30px; margin-top:-40px;">Contactanos</label>
+     <label for="name" class="form-label" style="font-size: 30px; margin-bottom:20px; font-weight: bold;">Contactanos</label>
      <div class="">
         <div class="row ">
         <div class="mb-3 col align-self-start">
@@ -237,8 +275,8 @@ button:active {
             <?php endif; ?>   
             </div>
         
-        <div class="mb-3 form-check">
-            <input type="checkbox" class="form-check-input" id="checkcontacted"  name="checkcontacted" value="1">
+        <div class="mb-3 ">
+            <input type="checkbox" class="form-check-input" id="checkcontacted"  name="checkcontacted" value="1" >
             <label class="form-check-label"   for="checkcontacted">Autorizó para ser contactado por el equipo</label>
             <?php if (!empty($checkcontactedError)): ?>
                 <div class="error"><?php echo $checkcontactedError; ?></div>
@@ -259,12 +297,7 @@ button:active {
     }
   });
 </script>
-<div id="customAlert" class="custom-alert">
-    <div class="alert-content">
-        <strong id="alert-title">¡Alerta!</strong>
-        <p id="alert-message">Este es el contenido de la alerta.</p>
-    </div>
-</div>
+
 
 
 <script>
