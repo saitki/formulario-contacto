@@ -87,9 +87,20 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         .autor a { color: hsl(228, 45%, 44%); }
         .error { color: red; }
         .success { color: green; }
+        :root {
+            --green-200: hsl(148, 38%, 91%);
+            --green-600: hsl(169, 82%, 27%);
+            --red-600: hsl(0, 66%, 56%);
+            --white: hsl(0, 0%, 100%);
+            --gray-700: hsl(187, 24%, 22%);
+            --font-primary: 'Karla', sans-serif;
+        }
+        
 body {
     background-color: aquamarine;
+    padding-bottom: 50px; /* Ajusta según la altura del footer */
 }
+
 .form-control {
     transition: border-color 0.3s, box-shadow 0.3s;
 }
@@ -143,6 +154,10 @@ button:active {
     border-color: #003366;
 }
 
+button:active {
+    background-color: #004085; 
+    border-color: #003366;
+}
 
         /* Estilos para el contenedor de la alerta */
 .custom-alert {
@@ -195,6 +210,46 @@ button:active {
     align-items: center;
     gap: 5px; /* Espaciado entre el icono y el texto */
 }
+@media (min-width: 768px) {
+            .container {
+                max-width: 700px;
+            }
+        }
+
+
+
+
+.autor a {
+    color: #1abc9c; /* Color del enlace */
+    text-decoration: none;
+    font-weight: bold;
+    transition: color 0.3s ease;
+}
+
+.autor a:hover {
+    color: #16a085; /* Color del enlace al pasar el mouse */
+    text-decoration: underline;
+}
+html, body {
+    height: 100%;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+.contenido {
+    flex: 1; /* Hace que el contenido ocupe el espacio disponible */
+}
+
+.autor {
+    width: 100%;
+    background-color: #f8f9fa; /* Color de fondo */
+    text-align: center;
+    padding: 10px;
+    font-size: 14px;
+    border-top: 1px solid #ccc; /* Línea superior */
+}
+
     </style>
 </head>
 <body>
@@ -221,59 +276,76 @@ button:active {
      <form id="myForm" action="<?= $_SERVER['PHP_SELF'] ?>" class="formulario" enctype="multipart/form-data" method="post">
         
      <label for="name" class="form-label" style="font-size: 30px; margin-bottom:20px; font-weight: bold;">Contactanos</label>
-     <div class="">
         <div class="row ">
-        <div class="mb-3 col align-self-start">
-            <label for="name" class="form-label">Nombre</label>
-            <input type="text" class="form-control <?php echo !empty($nameError) ? 'is-invalid' : ''; ?>" name="name" id="name" value="<?php echo htmlspecialchars($name); ?>">
-            <?php if (!empty($nameError)): ?>
-                <div class="error"><?php echo $nameError; ?></div>
-            <?php endif; ?>
-        </div>
-        <div class="mb-3 col">
-            <label for="lastname" class="form-label">Apellido</label>
-            <input type="text" class="form-control <?php echo !empty($lastnameError) ? 'is-invalid' : ''; ?>"  name="lastname" id="lastname" aria-describedby="lastnameHelp" >
-            <?php if (!empty($lastnameError)): ?>
-                <div class="error"><?php echo $lastnameError; ?></div>
-            <?php endif; ?>        
-        </div>   
-     
-        <div class="mb-3">
-            <label for="email" class="form-label">Correo electrónico</label>
-            <input type="email" class="form-control <?php echo !empty($emailError) ? 'is-invalid' : ''; ?>" name="email" id="email" aria-describedby="emailHelp" >
-            <?php if (!empty($emailError)): ?>
-                <div class="error"><?php echo $emailError; ?></div>
-            <?php endif; ?>                
-        </div>
-
-        <div class=" mb-3 ">
-            <div class="row ">
-            <label  class="form-label">Selecciona una opción</label><br>
-                <div class="form-control col" style="margin-left: 10px;">
-                    <div class="form-check " >
-                    <input class="form-check-input" type="radio" id="flexRadioDefault1" name="option" value="1">
-                    <label class="form-check-label" for="flexRadioDefault1"> Opción 1 </label>
-
-                    </div>
-                </div>
-                <div class="form-control col"  style="margin-left: 10px; margin-right: 10px;">
-                    <div class="form-check ">
-                    <input class="form-check-input" type="radio" name="option" id="flexRadioDefault2"  value="2" >
-                    <label class="form-check-label" for="flexRadioDefault2">Opción 2 </label>
-                    </div>
-                </div>
+            <div class="mb-3 col align-self-start">
+                <label for="name" class="form-label">Nombre</label>
+                <input type="text" class="form-control <?php echo !empty($nameError) ? 'is-invalid' : ''; ?>" name="name" id="name" value="<?php echo htmlspecialchars($name); ?>">
+                <?php if (!empty($nameError)): ?>
+                    <div class="error"><?php echo $nameError; ?></div>
+                <?php endif; ?>
             </div>
-            <?php if (!empty($optionError)): ?>
-                <div class="error"><?php echo $optionError; ?></div>
-            <?php endif; ?>   
-    </div>   
+            <div class="mb-3 col">
+                <label for="lastname" class="form-label">Apellido</label>
+                <input type="text" class="form-control <?php echo !empty($lastnameError) ? 'is-invalid' : ''; ?>"  name="lastname" id="lastname" aria-describedby="lastnameHelp" >
+                <?php if (!empty($lastnameError)): ?>
+                    <div class="error"><?php echo $lastnameError; ?></div>
+                <?php endif; ?>        
+            </div>   
+     
+            <div class="mb-3">
+                <label for="email" class="form-label">Correo electrónico</label>
+                <input type="email" class="form-control <?php echo !empty($emailError) ? 'is-invalid' : ''; ?>" name="email" id="email" aria-describedby="emailHelp" >
+                <?php if (!empty($emailError)): ?>
+                    <div class="error"><?php echo $emailError; ?></div>
+                <?php endif; ?>                
+            </div>
+
+            <div class=" mb-3 ">
+                <div class="row ">
+                <label class="form-label">Selecciona una opción</label><br>
+                <div class="form-control col option-container" style="margin-left: 10px;">
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" id="flexRadioDefault1" name="option" value="1">
+                        <label class="form-check-label" for="flexRadioDefault1"> Opción 1 </label>
+                    </div>
+                </div>
+                <div class="form-control col option-container" style="margin-left: 10px; margin-right: 10px;">
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="option" id="flexRadioDefault2" value="2">
+                        <label class="form-check-label" for="flexRadioDefault2">Opción 2 </label>
+                    </div>
+                </div>
+
+                <style>
+                    .active-container {
+                        border-color: #3d685e;
+                        background-color: #e0f7fa; /* Fondo ligero para destacar */
+                    }
+                </style>
+
+                <script>
+                    document.querySelectorAll(".form-check-input").forEach(input => {
+                        input.addEventListener("change", function() {
+                            document.querySelectorAll(".option-container").forEach(container => {
+                                container.classList.remove("active-container");
+                            });
+                            this.closest(".option-container").classList.add("active-container");
+                        });
+                    });
+                </script>
+
+                <?php if (!empty($optionError)): ?>
+                    <div class="error"><?php echo $optionError; ?></div>
+                <?php endif; ?>   
+                </div>
+            </div>   
         <div class="mb-3">
             <label for="exampleFormControlTextarea1" class="form-label">Mensaje</label>
              <textarea class="form-control <?php echo !empty($messageError) ? 'is-invalid' : ''; ?>"   name="message" id="exampleFormControlTextarea1" rows="3" ></textarea>
              <?php if (!empty($messageError)): ?>
                 <div class="error"><?php echo $messageError; ?></div>
             <?php endif; ?>   
-            </div>
+        </div>
         
         <div class="mb-3 ">
             <input type="checkbox" class="form-check-input" id="checkcontacted"  name="checkcontacted" value="1" >
@@ -283,11 +355,11 @@ button:active {
             <?php endif; ?>   
         </div>
         <button type="submit" class="btn btn-primary">Submit</button>
-        </form>
+    </form>
         <!-- Mensajes de éxito o error -->
 
 
-
+    </div>
     <script>
   document.getElementById('myForm').addEventListener('submit', function(event) {
     const checkbox = document.getElementById('checkcontacted');
@@ -325,10 +397,9 @@ button:active {
 // Ejemplo de uso: Mostrar la alerta con título y mensaje
 
 </script>
-    </div>
-    <div class="autor">
+</div>
+<footer class="autor" style="margin-top: 60px;">
         Formulario de contacto @2025. Desarrollado por <a href="#">Alejandro Lenier Ireta Xiu</a>.
-    </div>
-
+</footer>
 </body>
 </html>
